@@ -43,8 +43,8 @@ class DataBox(BoxLayout):
                         self.remove_widget(self.children[-1])
 
             if self.children:
-                for i, widget_dict in enumerate(value):
-                    self.children[i].refresh_view_attrs(self, i, widget_dict)
+                for i, child in enumerate(reversed(self.children)):
+                    child.refresh_view_attrs(self, i, value[i])
 
     def on_viewclass(self, instance, value):
         if isinstance(value, string_types):
