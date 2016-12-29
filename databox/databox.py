@@ -7,6 +7,10 @@ from kivy.factory import Factory
 
 
 class DataView(object):
+    '''refresh_view_attrs is called every time when DataBox data is updated,
+    to update child attributes from that. Inherit from this class to have a
+    widget which can work as a DataBox viewclass
+    '''
 
     def refresh_view_attrs(self, rv, index, data):
         '''Attributes are set from data dict keys and values'''
@@ -43,8 +47,18 @@ class DataBox(BoxLayout):
                         self.remove_widget(self.children[-1])
 
             if self.children:
-                for i, child in enumerate(reversed(self.children)):
-                    child.refresh_view_attrs(self, i, value[i])
+                try:
+                    for i, child in enumerate(reversed(self.children)):
+                        child.refresh_view_attrs(self, i, value[i])
+                except AttributeError as e:
+                    # Force update viewclass which doesn't have a
+                    # refresh_view_attrs method
+                    if str(
+                        e).find("has no attribute 'refresh_view_attrs'") != -1:
+                            for i, child in enumerate(reversed(self.children)):
+                                for k, v in value[i].iteritems():
+                                    setattr(child, k, v)
+
 
     def on_viewclass(self, instance, value):
         if isinstance(value, string_types):
