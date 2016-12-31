@@ -70,3 +70,36 @@ class DataBox(BoxLayout):
 
     def refresh_from_data(self, *args):
         self.on_data(None, self.data)
+
+
+if __name__ == '__main__':
+    from kivy.app import App
+    from kivy.uix.button import Button
+    from kivy.uix.scrollview import ScrollView
+    from kivy.metrics import cm
+
+
+    class DataButton(DataView, Button):
+        print_text = StringProperty()
+        def __init__(self, **kwargs):
+            super(DataButton, self).__init__(**kwargs)
+            self.size_hint_y = None
+            self.height = cm(1)
+
+        def on_release(self, *args):
+            print(self.print_text)
+
+
+    class DataBoxExample(App):
+        def build(self):
+            scroller = ScrollView()
+            data_box = DataBox(orientation='vertical', viewclass='DataButton', size_hint_y=None)
+            data_box.bind(minimum_height=data_box.setter('height'))
+            scroller.add_widget(data_box)
+            for i in range(0, 20):
+                data_box.data.append(
+                    {'text': 't' + str(i), 'print_text': str(i * 3 + 2)})
+            return scroller
+
+    app = DataBoxExample()
+    app.run()
