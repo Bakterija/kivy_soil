@@ -10,7 +10,7 @@ log_keys = False
 def add(name, key, state, callback, modifier=None):
     keybinds[name] = {
         'callback': callback,
-        'key': key,
+        'key': int(key),
         'state': state,
         'modifier': modifier
     }
@@ -25,11 +25,11 @@ def on_key_down(win, key, *args):
     except:
         modifier = []
 
-    if key == 308:
-        alt_hold = True
-    elif key == 305:
+    if key in (308, 1073741824):
+        alt_held = True
+    elif key in (305, 306):
         ctrl_held = True
-    elif key == 304:
+    elif key in (304, 303):
         shift_held = True
 
     if log_keys:
@@ -46,11 +46,11 @@ def on_key_up(win, key, *args):
     if log_keys:
         Logger.info('KeyBinder: on_key___up: {} - {}'.format(key, args))
 
-    if key == 308:
-        alt_hold = False
-    elif key == 305:
+    if key in (308, 1073741824):
+        alt_held = False
+    elif key in (305, 306):
         ctrl_held = False
-    elif key == 304:
+    elif key in (304, 303):
         shift_held = False
 
     for k, v in keybinds.items():
