@@ -6,20 +6,46 @@ ctrl_held = False
 alt_held = False
 shift_held = False
 log_keys = False
+active = True
+ignore_warnings = False
+
+def start():
+    global active
+    active = True
+
+def stop():
+    global active
+    active = False
 
 def add(name, key, state, callback, modifier=None):
-    keybinds[name] = {
+    if name in keybinds:
+        log_warning('key_binder: key {} in {} was added to keybinds before,'
+                    'replacing with {}'.format(
+                        name, keybinds[name], make_kb_dict(
+                            name, key, state, callback, modifier=modifier)))
+    keybinds[name] = make_kb_dict(
+        name, key, state, callback, modifier=modifier)
+
+def make_kb_dict(name, key, state, callback, modifier=None):
+    return {
         'callback': callback,
         'key': int(key),
         'state': state,
         'modifier': modifier
-    }
+        }
 
 def remove(name):
-    del keybinds[name]
+    try:
+        del keybinds[name]
+    except KeyError as e:
+        Logger.error('key_binder: key "%s" is not in keybinds' % (name))
+        raise e
 
 def on_key_down(win, key, *args):
     global ctrl_held, alt_held, shift_held
+    if not active:
+        return
+
     try:
         modifier = args[2]
     except:
@@ -43,6 +69,9 @@ def on_key_down(win, key, *args):
 
 def on_key_up(win, key, *args):
     global ctrl_held, alt_held, shift_held
+    if not active:
+        return
+
     if log_keys:
         Logger.info('KeyBinder: on_key___up: {} - {}'.format(key, args))
 
@@ -57,6 +86,10 @@ def on_key_up(win, key, *args):
         if v['key'] == key:
             if v['state'] in ('up', 'any', 'all'):
                 v['callback']()
+
+def log_warning(text):
+    if not ignore_warnings:
+        Logger.warning(text)
 
 
 Window.bind(on_key_down=on_key_down)
