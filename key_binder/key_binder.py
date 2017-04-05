@@ -7,6 +7,7 @@ alt_held = False
 shift_held = False
 log_keys = False
 active = True
+disabled_categories = set()
 ignore_warnings = False
 
 def start():
@@ -17,21 +18,38 @@ def stop():
     global active
     active = False
 
-def add(name, key, state, callback, modifier=None):
+def start_categories(categories):
+    global disabled_categories
+    if type(categories) == str:
+        categories = [categories]
+    for x in categories:
+        if x in disabled_categories:
+            disabled_categories.remove(x)
+
+def stop_categories(categories):
+    global disabled_categories
+    if type(categories) == str:
+        categories = [categories]
+    for x in categories:
+        disabled_categories.add(x)
+
+def add(name, key, state, callback, modifier=None, category='n/a'):
     if name in keybinds:
         log_warning('key_binder: key {} in {} was added to keybinds before,'
                     'replacing with {}'.format(
                         name, keybinds[name], make_kb_dict(
-                            name, key, state, callback, modifier=modifier)))
+                            name, key, state, callback,
+                            modifier=modifier, category=category)))
     keybinds[name] = make_kb_dict(
-        name, key, state, callback, modifier=modifier)
+        name, key, state, callback, modifier=modifier, category=category)
 
-def make_kb_dict(name, key, state, callback, modifier=None):
+def make_kb_dict(name, key, state, callback, modifier=None, category=''):
     return {
         'callback': callback,
         'key': int(key),
         'state': state,
-        'modifier': modifier
+        'modifier': modifier,
+        'category': category,
         }
 
 def remove(name):
@@ -62,6 +80,8 @@ def on_key_down(win, key, *args):
         Logger.info('KeyBinder: on_key_down: {} - {}'.format(key, modifier))
 
     for k, v in keybinds.items():
+        if v['category'] in disabled_categories:
+            continue
         if v['key'] == key:
             if v['state'] in ('down', 'any', 'all'):
                 if not v['modifier'] or v['modifier'] == modifier:
@@ -83,6 +103,8 @@ def on_key_up(win, key, *args):
         shift_held = False
 
     for k, v in keybinds.items():
+        if v['category'] in disabled_categories:
+            continue
         if v['key'] == key:
             if v['state'] in ('up', 'any', 'all'):
                 v['callback']()
