@@ -1,1 +1,1 @@
-InfoWidget displays toast notifications in a Kivy app
+InfoWidget displays notifications in a Kivy app
