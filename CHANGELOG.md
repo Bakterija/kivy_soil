@@ -1,3 +1,11 @@
+# 3.00
+ - Added on_release event dispatch in kb_system compat menu widget
+ - Changed template_app TextInput rule to TerminalWidgetTextInput
+ - Added print_button_text method for terminal_widget press_button plugin 
+ - Improved kivy_soil focus behavior integration for for kivy soil text editor
+ - Added quick_open method for kivy_soil text editor popup
+
+
 # 2.00
  - Added changelog
  - Changed AppRecycleBoxLayout.open_context_menu method to return what is returned by context_menu_function

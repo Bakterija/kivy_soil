@@ -124,7 +124,7 @@ def set_focus_previous(*args):
     if not focus_grab_widgets:
         if prev_focused_widgets:
             last = prev_focused_widgets[-1]
-            Logger.info('focus: focusing previous %s' % (last()))
+            # Logger.info('focus: focusing previous %s' % (last()))
             set_focus(last(), change_previous=False)
 
 def set_focus(widget, change_previous=True):
