@@ -1,9 +1,12 @@
+# 3.10
+ - Added HoverBehavior improvements from my kivy pr
+
 # 3.00
  - Added on_release event dispatch in kb_system compat menu widget
  - Changed template_app TextInput rule to TerminalWidgetTextInput
  - Added print_button_text method for terminal_widget press_button plugin 
- - Improved kivy_soil focus behavior integration for for kivy soil text editor
- - Added quick_open method for kivy_soil text editor popup
+ - Improved focus behavior integration for for text editor
+ - Added quick_open method for text editor popup
 
 
 # 2.00
