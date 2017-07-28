@@ -124,7 +124,7 @@ def set_focus_previous(*args):
     if not focus_grab_widgets:
         if prev_focused_widgets:
             last = prev_focused_widgets[-1]
-            # Logger.info('focus: focusing previous %s' % (last()))
+            Logger.info('focus: focusing previous %s' % (last()))
             set_focus(last(), change_previous=False)
 
 def set_focus(widget, change_previous=True):
@@ -209,11 +209,12 @@ class FocusBehavior(Widget):
             self.remove_from_focus()
 
     def on_grab_focus(self, _, value):
-        self.remove_from_focus()
-        if self.parent:
-            on_parent(self, self.parent)
-            if value and self.is_focusable:
-                self.focus_widget(self)
+        if self.is_focusable:
+            self.remove_from_focus()
+            if self.parent:
+                on_parent(self, self.parent)
+                if value and self.is_focusable:
+                    self.focus_widget(self)
 
     def on_is_subfocus(self, _, value):
         if value:
@@ -247,6 +248,9 @@ class FocusBehavior(Widget):
             if current_focus != self:
                 remove_focus()
                 set_focus(self)
+
+    def focus_previous(self, *args):
+        set_focus_previous()
 
     def focus_widget(self, *args):
         '''Focus this widget'''
