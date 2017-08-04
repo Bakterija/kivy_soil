@@ -80,7 +80,6 @@ def focus_next():
         for fwidget in focus_grab_widgets:
             if fwidget.is_focusable:
                 grabbed_focus = True
-                # fwidget = focus_grab_widgets[0]
                 if fwidget.subfocus_widgets:
                     if fwidget.focus:
                         new_focus = fwidget.subfocus_widgets[0]

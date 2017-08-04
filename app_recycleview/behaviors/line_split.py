@@ -5,7 +5,6 @@ import copy
 
 class LineSplitBehavior(object):
     split_text_key = StringProperty('text')
-    split_text_indent = NumericProperty(4)
     chars_per_line = NumericProperty(100)
     _unsplit_data = ListProperty()
 

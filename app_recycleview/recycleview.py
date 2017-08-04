@@ -23,6 +23,8 @@ class AppRecycleView(RecycleView):
     data_full = ListProperty()
     '''ListProperty that stores all widget data unsorted'''
 
+    filters = ListProperty()
+
     def __init__(self, **kwargs):
         super(AppRecycleView, self).__init__(**kwargs)
         self.fbind('reverse_sorting', self.update_data_from_filter)
@@ -37,8 +39,12 @@ class AppRecycleView(RecycleView):
         elif key == keys.DOWN:
             self.children[0].on_arrow_down()
         elif key == keys.PAGE_UP:
-            self.scroll_to_start()
+            self.page_up()
         elif key == keys.PAGE_DOWN:
+            self.page_down()
+        elif key == keys.HOME:
+            self.scroll_to_start()
+        elif key == keys.END:
             self.scroll_to_end()
         elif key in (keys.MENU, keys.MENU_WIN):
             drop = self.children[0].open_context_menu()
@@ -64,6 +70,8 @@ class AppRecycleView(RecycleView):
         data = self.sort_data(data, self.reverse_sorting, self.sorting_key)
         if self.children:
             self.children[0].on_data_update_sel(len(self.data), len(data))
+        for x in self.filters:
+            data = x(data)
         self.data = data
         self.refresh_from_data()
 

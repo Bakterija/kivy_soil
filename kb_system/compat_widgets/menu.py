@@ -86,13 +86,21 @@ class MDMenu(AppRecycleView, FocusBehavior):
             box.on_arrow_down()
             self.remove_hover()
         elif key in (keys.RETURN, keys.ENTER):
-            for x in box.children:
-                if x.selected:
-                    if not x.disabled:
-                        x.on_press()
-                        x.on_release()
-                        self.dismiss_ctx_menu()
-                    break
+            e = None
+            try:
+                for x in box.children:
+                    if x.selected:
+                        if not x.disabled:
+                                x.on_press()
+                                x.on_release()
+                        break
+            except Exception as e:
+                pass
+            finally:
+                # Always close menu before raising exception
+                self.dismiss_ctx_menu()
+                if e:
+                    raise e
         elif key == keys.ESC:
             self.dismiss_ctx_menu()
 

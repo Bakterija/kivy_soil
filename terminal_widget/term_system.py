@@ -167,7 +167,9 @@ class TerminalWidgetSystem(EventDispatcher):
 
     def add_text(self, text, text_time=None, level=None,
                  add_autocomplete=True):
-        text = get_unicode(text)
+        text = str(text)
+        if PY2:
+            text = get_unicode(text)
         if add_autocomplete:
             self.add_autocomplete_words_from_text(text)
         if not text_time:

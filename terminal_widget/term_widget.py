@@ -183,7 +183,7 @@ class TerminalWidget(BoxLayout):
             d = 0.05
         self.ids.inputw.is_focusable = True
         if focus_input:
-            Clock.schedule_once(self.focus_input, d * 2.0)
+            Clock.schedule_once(self.focus_input, d * 3.0)
 
     def animate_in_big(self, focus_input=True):
         self.size = self.big_size
@@ -200,7 +200,7 @@ class TerminalWidget(BoxLayout):
             d = 0.05
         self.ids.inputw.is_focusable = True
         if focus_input:
-            Clock.schedule_once(self.focus_input, d * 2.0)
+            Clock.schedule_once(self.focus_input, d * 3.0)
 
     def animate_out(self, *args):
         self.ids.inputw.focus = False

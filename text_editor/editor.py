@@ -11,6 +11,7 @@ from kivy.lang import Builder
 Builder.load_string('''
 #: import CompatTextInput kivy_soil.kb_system.compat_widgets.textinput.CompatTextInput
 #: import DampedScrollEffect kivy.effects.dampedscroll.DampedScrollEffect
+
 <TextEditor>:
     border_color: inputw.border_color
     border_width: inputw.border_width
@@ -54,9 +55,21 @@ class TextEditor(BoxLayout):
     border_width = NumericProperty(1)
     focus = BooleanProperty(False)
     inputw = ObjectProperty()
+    text = StringProperty()
 
     def __init__(self, **kwargs):
         super(TextEditor, self).__init__(**kwargs)
+
+    def on_inputw(self, _, value):
+        value.bind(text=self.on_inputw_text)
+
+    def on_inputw_text(self, _, value):
+        if self.text != value:
+            self.text = value
+
+    def on_text(self, _, value):
+        if self.inputw.text != self.text:
+            self.inputw.text = value
 
     def on_cursor(self, value):
         pass
@@ -98,9 +111,12 @@ class TextEditorPopup(Popup, FocusBehaviorCanvas):
 
     def __init__(self, **kwargs):
         super(TextEditorPopup, self).__init__(**kwargs)
-        self.content = TextEditor(is_focusable=True)
-        self.content.bind(inputw=self.on_inputw)
         self.size_hint = (0.9, 0.9)
+        self.content = TextEditor(is_focusable=True)
+        if self.content.inputw:
+            self.on_inputw(None, self.content.inputw)
+        else:
+            self.content.bind(inputw=self.on_inputw)
 
     def on_inputw(self, _, widget):
         widget.bind(border_width=self.setter('border_width'))
@@ -108,20 +124,21 @@ class TextEditorPopup(Popup, FocusBehaviorCanvas):
         widget.is_subfocus = True
         self.subfocus_widgets = [widget]
 
-    def open(self, *args):
+    def open(self, focus=False, *args):
         super(TextEditorPopup, self).open(*args)
         self.content.ids.inputw.text = self.text
-        Clock.schedule_once(self.focus_textinput, 0)
+        self.content.ids.inputw.cursor = (0, 0)
+        if focus:
+            Clock.schedule_once(self.focus_textinput, 0)
 
     def focus_textinput(self, *args):
         winput = self.content.ids.inputw
         winput.focus = True
-        winput.cursor = (0, 0)
 
     @staticmethod
-    def quick_open(text):
+    def quick_open(text, focus=False):
         '''Static method that creates a new popup with argument text
         and opens it, then returns the new widget'''
         new = TextEditorPopup(text=text)
-        new.open()
+        new.open(focus=focus)
         return new

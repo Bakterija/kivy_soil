@@ -33,8 +33,6 @@ class TemplateApp(App):
             Clock.schedule_once(self.init_template_widgets, 0)
         elif self.use_template_keybinds:
             self.init_keybinds()
-        if platform == 'android':
-            Window.softinput_mode = 'pan'
 
     def init_template_widgets(self, *args):
         Logger.info('TemplateApp: initialising template widgets')
@@ -90,9 +88,9 @@ class TemplateApp(App):
                 self.stop()
             else:
                 self.display_info_toast('Double press escape to quit')
-            self.escape_presses += 1
-            Clock.unschedule(self.reset_escape_presses)
-            Clock.schedule_once(self.reset_escape_presses, 0.8)
+                self.escape_presses += 1
+                Clock.unschedule(self.reset_escape_presses)
+                Clock.schedule_once(self.reset_escape_presses, 0.8)
 
     def reset_escape_presses(self, *args):
         self.escape_presses = 0

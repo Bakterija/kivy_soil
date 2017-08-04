@@ -20,20 +20,20 @@ class LoggerHistoryProper(EventDispatcher):
 
 LoggerHistoryProper = LoggerHistoryProper()
 
-def exception(msg, *args):
-    Logger._exception(msg)
+def exception(msg, *args, **kwargs):
+    Logger._exception(msg, *args, **kwargs)
     LoggerHistoryProper.add_data(msg, 'exception')
 
-def warning(msg, *args):
-    Logger._warning(msg)
+def warning(msg, *args, **kwargs):
+    Logger._warning(msg, *args, **kwargs)
     LoggerHistoryProper.add_data(msg, 'warning')
 
-def error(msg, *args):
-    Logger._error(msg)
+def error(msg, *args, **kwargs):
+    Logger._error(msg, *args, **kwargs)
     LoggerHistoryProper.add_data(msg, 'error')
 
-def info(msg, *args):
-    Logger._info(msg)
+def info(msg, *args, **kwargs):
+    Logger._info(msg, *args, **kwargs)
     LoggerHistoryProper.add_data(msg, 'info')
 
 Logger._exception = Logger.exception
