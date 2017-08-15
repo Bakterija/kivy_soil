@@ -1,3 +1,7 @@
+# 4.10
+ - Fixed compat widget AppPopup not updating min_hover_height correctly
+
+
 # 4.00
  - Added AppRecycleView filters property
  - Changed AppRecycleView on_key_down method to scroll a page up/down instead of to start or end when page up/down is pressed
